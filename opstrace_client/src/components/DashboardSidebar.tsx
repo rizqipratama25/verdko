@@ -16,7 +16,7 @@ interface Props {
 
 
 const DashboardSidebar = ({ menuItems }: Props) => {
-    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [sidebarOpen, setSidebarOpen] = useState(true);
 
     const { mutate: logout, isPending: isLogoutPending } = useLogout();
     const navigate = useNavigate();
