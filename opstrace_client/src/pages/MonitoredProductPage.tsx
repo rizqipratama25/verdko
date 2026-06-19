@@ -1,6 +1,10 @@
+import DataTable from "../components/DataTable"
+
 const MonitoredProductPage = () => {
   return (
-    <div>MonitoredProductPage</div>
+    <div>
+      <DataTable />
+    </div>
   )
 }
 

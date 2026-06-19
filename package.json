@@ -1,0 +1,9 @@
+{
+    "scripts": {
+        "dev": "concurrently -n API,QUEUE,SCHEDULE,CLIENT,SCRAPER \"cd opstrace_api && php artisan serve\" \"cd opstrace_api && php artisan queue:work\" \"cd opstrace_api && php artisan schedule:work\" \"cd opstrace_client && npm run dev\" \"cd opstrace_scraper && .\\venv\\Scripts\\python.exe -u app.py\"",
+        "client": "concurrently -n API,CLIENT \"cd opstrace_api && php artisan serve\" \"cd opstrace_client && npm run dev\""
+    },
+    "devDependencies": {
+        "concurrently": "^9.0.0"
+    }
+}

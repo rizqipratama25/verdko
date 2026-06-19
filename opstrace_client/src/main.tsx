@@ -6,13 +6,19 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import MonitoredProductPage from './pages/MonitoredProductPage.tsx'
 import PriceHistoryPage from './pages/PriceHistoryPage.tsx'
 import { Toaster } from 'react-hot-toast'
+import Dashboard from './layouts/Dashboard.tsx'
 
 const queryClient = new QueryClient()
 
 const router = createBrowserRouter([
-  {path: '/', element: <App />},
-  {path: '/monitored-products', element: <MonitoredProductPage />},
-  {path: '/price-history', element: <PriceHistoryPage />},
+  { path: '/', element: <App /> },
+  {
+    element: <Dashboard />,
+    children: [
+      { path: '/monitored-products', element: <MonitoredProductPage /> },
+      { path: '/price-histories', element: <PriceHistoryPage /> },
+    ]
+  }
 ]);
 
 
