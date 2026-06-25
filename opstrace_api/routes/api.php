@@ -37,5 +37,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/monitored-product/{monitoredProduct}', [MonitoredProductController::class, 'destroy']);
 
     Route::get('/price-histories', [PriceHistoryController::class, 'index']);
-    Route::post('/monitoring-results', [PriceHistoryController::class, 'store']);
 });
+
+Route::post('/monitoring-results', [PriceHistoryController::class, 'store'])->middleware('scraper.key');
