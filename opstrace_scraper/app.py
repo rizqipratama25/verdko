@@ -3,6 +3,8 @@ import redis
 import json
 import requests
 from datetime import datetime
+from dotenv import load_dotenv
+import os
 
 # Connect to Redis
 r = redis.Redis(
@@ -15,6 +17,9 @@ r = redis.Redis(
     health_check_interval=30,
 )
 print("Connected to Redis")
+
+# Load .env
+load_dotenv()
 
 while True:
 
@@ -60,44 +65,28 @@ while True:
         
         # Convert the cleaned price to an integer
         price = int(clean_price)
-        
-        # Declare the login data
-        login_data = {
-            "email": "admin@opstrace.com",
-            "password": "admin123"
+            
+        # Set the headers for the API requests
+        headers = {
+            "X-Scraper-Key": os.getenv("SCRAPER_API_KEY"),
+            "Accept": "application/json",
+            "Content-Type": "application/json",
         }
         
-        # Send a POST request to the login endpoint with the login data
-        login_url = "http://127.0.0.1:8000/api/auth/login"
-        login_response = requests.post(login_url, json=login_data)
+        print("Ini key nya", os.getenv("SCRAPER_API_KEY"))
         
-        # Check if the login was successful
-        if login_response.status_code == 200:
-            # Extract the token from the response
-            token = login_response.json()["data"]["token"]
-            
-            # Set the headers for the API requests
-            headers = {
-                "Authorization": f"Bearer {token}",
-                "Accept": "application/json",
-                "Content-Type": "application/json",
-            }
-            
-            # Send a POST request to the monitoring-results endpoint with the product ID, price, and detected_at
-            endpoint_url = "http://127.0.0.1:8000/api/monitoring-results"
-            payload = {
-                "monitored_product_id": product["id"],
-                "price": price,
-                "detected_at": datetime.now().isoformat()
-            }
-            response = requests.post(endpoint_url, json=payload, headers=headers)
-            
-            # Check if the request was successful
-            print("Status: ", response.status_code)
-            print("Response: ", response.json())
-        else :
-            # Handle login failure
-            print("Login failed: ", login_response.text)
+        # Send a POST request to the monitoring-results endpoint with the product ID, price, and detected_at
+        endpoint_url = "http://127.0.0.1:8000/api/monitoring-results"
+        payload = {
+            "monitored_product_id": product["id"],
+            "price": price,
+            "detected_at": datetime.now().isoformat()
+        }
+        response = requests.post(endpoint_url, json=payload, headers=headers)
+        
+        # Check if the request was successful
+        print("Status: ", response.status_code)
+        print("Response: ", response.json())
         
         
     
