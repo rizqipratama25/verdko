@@ -10,5 +10,7 @@ export interface MonitoredProduct {
 }
 
 export interface MonitoredProductPayload {
-    
+    name: string;
+    marketplace: string;
+    product_url: string;
 }
