@@ -4,10 +4,10 @@
     --color-background-primary: #fafafa;
     --color-background-secondary: #ffffff;
 
-    --color-primary: #EA580C;
-    --color-secondary: #303030;
+    --color-primary: #047857;
+    --color-secondary: #0F172A;
 
-    --color-border-primary: #E5E7EB;
+    --color-border-primary: #E2E8F0;
 }
 
 @layer base {

@@ -15,7 +15,6 @@ const DashboardHeader = ({ name, email }: Props) => {
                         <div className="hidden md:block">
                             <p className="text-sm font-semibold">{name}</p>
                             <p className="text-xs text-gray-500">{email}</p>
-                            <p></p>
                         </div>
                     </div>
                 </div>
