@@ -26,7 +26,7 @@ const DashboardSidebar = ({ menuItems }: Props) => {
     return (
         <div className={`${sidebarOpen ? "w-64" : "w-20"} bg-white border-r border-border-primary transition-all duration-300 flex flex-col`}>
             <div className="p-4.5 border-b border-border-primary flex items-center justify-between">
-                {sidebarOpen && <h1 className="text-xl text-primary font-bold">Ops<span className="text-secondary">Trace</span></h1>}
+                {sidebarOpen && <h1 className="text-xl text-primary font-bold">Verdko</h1>}
                 <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 text-secondary hover:text-secondary/90">
                     {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
                 </button>
@@ -39,7 +39,7 @@ const DashboardSidebar = ({ menuItems }: Props) => {
                         to={item.to}
                         className={({isActive}) => `w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive
                             ? 'bg-primary text-white'
-                            : 'text-secondary hover:bg-primary/10 hover:text-white'
+                            : 'text-secondary hover:bg-primary-hover hover:text-white'
                         }`}
                     >
                         <item.icon size={20} />

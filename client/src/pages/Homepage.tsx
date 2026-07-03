@@ -45,10 +45,10 @@ const Homepage = () => {
 
                 <div className="min-h-screen w-full max-w-7xl mx-auto flex flex-col justify-center items-center gap-12">
                     <div className="flex flex-col justify-center items-center">
-                        <div className="text-7xl font-bold text-primary">Monitor Smarter</div>
-                        <div className="text-7xl font-bold text-secondary">Respond Faster</div>
+                        <div className="text-8xl font-bold text-primary">Know First</div>
+                        <div className="text-8xl font-bold text-secondary">Act Faster</div>
                     </div>
-                    <button onClick={() => setShowAuthModal((prev) => !prev)} className="bg-primary hover:bg-primary/90 text-white px-12 py-2 rounded-3xl cursor-pointer">Get Started</button>
+                    <button onClick={() => setShowAuthModal((prev) => !prev)} className="bg-primary hover:bg-primary-hover text-white px-12 py-2 rounded-3xl cursor-pointer">Get Started</button>
                 </div>
 
 
@@ -82,7 +82,7 @@ const Homepage = () => {
                         <button
                             type="submit"
                             disabled={isPending}
-                            className="w-full bg-primary hover:bg-primary/90 disabled:bg-primary/60 text-white py-2 rounded-lg font-medium  cursor-pointer"
+                            className="w-full bg-primary hover:bg-primary-hover disabled:bg-primary/60 text-white py-2 rounded-lg font-medium  cursor-pointer"
                         >
                             {isPending ? "Logging In..." : "Log In"}
                         </button>

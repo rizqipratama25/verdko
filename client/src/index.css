@@ -7,6 +7,12 @@
     --color-primary: #047857;
     --color-secondary: #0F172A;
 
+    --color-primary-hover: #065F46;
+
+    --color-text-primary: #0F172A;
+    --color-text-secondary: #475569;
+    --color-text-muted: #94A3B8;
+
     --color-border-primary: #E2E8F0;
 }
 

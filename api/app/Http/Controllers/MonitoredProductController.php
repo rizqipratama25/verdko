@@ -23,7 +23,7 @@ class MonitoredProductController extends Controller
                 ->latest()
                 ->paginate();
 
-            return $this->successResponse($monitoredProducts, "Monitored products retrieved successfully");
+            return $this->paginatedResponse($monitoredProducts, "Monitored products retrieved successfully");
         } catch (Exception $e) {
             return $this->errorResponse("Failed to retrieve monitored products", 500, $e->getMessage());
         }
