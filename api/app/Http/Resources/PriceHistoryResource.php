@@ -16,7 +16,7 @@ class PriceHistoryResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "monitored_product" => $this->monitored_product->name,
+            "monitored_product" => $this->monitoredProduct->name,
             "price" => $this->price,
             "detected_at" => $this->detected_at
         ];

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('price');
 
             $table->timestamp('detected_at');
+            $table->timestamps();
         });
     }
 

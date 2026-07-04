@@ -1,6 +1,10 @@
+import { format } from "date-fns";
 import DataTable from "../components/DataTable"
 import { useMonitoredProducts } from "../hooks/monitoredProduct/useMonitoredProducts";
 import type { MonitoredProduct } from "../types/monitoredProduct.type";
+import { rupiahFormat } from "../utils/rupiahFormat.utils";
+import { ArrowUpRight } from "lucide-react";
+import StatusFormat from "../components/StatusFormat";
 
 const MonitoredProductPage = () => {
   const {data: monitoredProducts = [], isLoading} = useMonitoredProducts();
@@ -22,24 +26,24 @@ const MonitoredProductPage = () => {
       render: (row: MonitoredProduct) => <span className="text-sm font-medium text-text-primary">{row.marketplace}</span>
     },
     {
-      header: 'URL',
-      accessor: 'product_url',
-      render: (row: MonitoredProduct) => <span className="text-sm font-medium text-text-primary">{row.product_url}</span>
-    },
-    {
       header: 'Current Price',
       accessor: 'current_price',
-      render: (row: MonitoredProduct) => <span className="text-sm font-medium text-text-primary">{row.current_price}</span>
+      render: (row: MonitoredProduct) => <span className="text-sm font-medium text-text-primary">{rupiahFormat(row.current_price)}</span>
     },
     {
       header: 'Status',
       accessor: 'monitoring_status',
-      render: (row: MonitoredProduct) => <span className="text-sm font-medium text-text-primary">{row.monitoring_status}</span>
+      render: (row: MonitoredProduct) => <StatusFormat status="failed"/>
     },
     {
       header: 'Last Checked',
       accessor: 'last_checked_at',
-      render: (row: MonitoredProduct) => <span className="text-sm font-medium text-text-primary">{row.last_checked_at}</span>
+      render: (row: MonitoredProduct) => <span className="text-sm font-medium text-text-primary">{format(new Date(row.last_checked_at), "dd MMM yyyy HH:mm:ss")}</span>
+    },
+    {
+      header: 'URL',
+      accessor: 'product_url',
+      render: (row: MonitoredProduct) => <span className="text-sm font-medium text-text-primary"><a href={row.product_url} className="flex items-center gap-1">View Product<ArrowUpRight width="15"/></a></span>
     },
   ];
 

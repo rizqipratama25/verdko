@@ -1,6 +1,6 @@
 {
     "scripts": {
-        "dev": "concurrently -n API,QUEUE,SCHEDULE,CLIENT,SCRAPER \"cd api && php artisan serve\" \"cd api && php artisan queue:work\" \"cd api && php artisan schedule:work\" \"cd client && bun run dev\" \"cd scraper && .\\venv\\Scripts\\python.exe -u app.py\"",
+        "dev": "concurrently -n API,QUEUE,SCHEDULE,CLIENT,SCRAPER \"cd api && php artisan serve\" \"cd api && php artisan queue:work\" \"cd api && php artisan schedule:work\" \"cd client && bun run dev\" \"cd scraper && uv sync && uv run python -u main.py\"",
         "client": "concurrently -n API,CLIENT \"cd api && php artisan serve\" \"cd client && bun run dev\""
     },
     "devDependencies": {

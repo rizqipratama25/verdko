@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query"
 import type { LoginPayload } from "../../types/auth.type"
 import { login } from "../../services/auth.service"
-import { saveAuth } from "../../utils/authStorage"
+import { saveAuth } from "../../utils/authStorage.utils"
 import api from "../../lib/axios"
 
 export const useLogin = () => {

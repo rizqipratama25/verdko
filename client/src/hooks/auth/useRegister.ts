@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query"
 import type { RegisterPayload } from "../../types/auth.type"
 import { register } from "../../services/auth.service"
-import { saveAuth } from "../../utils/authStorage"
+import { saveAuth } from "../../utils/authStorage.utils"
 import api from "../../lib/axios"
 
 export const useRegister = () => {

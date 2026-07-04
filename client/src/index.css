@@ -13,6 +13,9 @@
     --color-text-secondary: #475569;
     --color-text-muted: #94A3B8;
 
+    --color-success: #16A34A;
+    --color-failed: #DC2626;
+
     --color-border-primary: #E2E8F0;
 }
 

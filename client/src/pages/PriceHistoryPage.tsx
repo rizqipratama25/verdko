@@ -1,5 +1,8 @@
+import { format } from "date-fns";
+import DataTable from "../components/DataTable";
 import { usePriceHistories } from "../hooks/priceHistory/usePriceHistories"
 import type { Pricehistory } from "../types/priceHistory.type";
+import { rupiahFormat } from "../utils/rupiahFormat.utils";
 
 const PriceHistoryPage = () => {
   const { data: priceHistories = [], isLoading } = usePriceHistories();
@@ -15,12 +18,24 @@ const PriceHistoryPage = () => {
         accessor: 'monitored_product',
         render: (row: Pricehistory) => <span className="text-sm font-medium text-text-primary">{row.monitored_product}</span>
       },
+      {
+        header: 'Price',
+        accessor: 'price',
+        render: (row: Pricehistory) => <span className="text-sm font-medium text-text-primary">{rupiahFormat(row.price)}</span>
+      },
+      {
+        header: 'Detected At',
+        accessor: 'detected_at',
+        render: (row: Pricehistory) => <span className="text-sm font-medium text-text-primary">{format(new Date(row.detected_at), "dd MMM yyyy HH:mm:ss")}</span>
+      },
     ];
   
     if (isLoading) return <div>Loading...</div>;
   
   return (
-    <div>PriceHistoryPage</div>
+    <div>
+      <DataTable columns={priceHistoriesColumns} data={priceHistories} />
+    </div>
   )
 }
 

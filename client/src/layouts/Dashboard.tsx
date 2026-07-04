@@ -1,5 +1,5 @@
 import { Box, Tag } from "lucide-react"
-import { getUser } from "../utils/authStorage"
+import { getUser } from "../utils/authStorage.utils"
 import DashboardSidebar from "../components/DashboardSidebar";
 import DashboardHeader from "../components/DashboardHeader";
 import { Outlet } from "react-router-dom";

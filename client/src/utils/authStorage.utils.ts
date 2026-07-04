@@ -1,8 +1,8 @@
 import type { AuthUser } from "../types/auth.type";
 
 
-const TOKEN_KEY = "opstrace_token";
-const USER_KEY = "opstrace_user";
+const TOKEN_KEY = "verdko_token";
+const USER_KEY = "verdko_user";
 
 export const saveAuth = (user: AuthUser) => {
     localStorage.setItem(TOKEN_KEY, user.token);
