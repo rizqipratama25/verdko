@@ -1,3 +1,4 @@
 asset/
 node_modules/
 scraper_pip/
+*.env
