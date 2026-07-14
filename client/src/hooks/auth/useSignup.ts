@@ -1,12 +1,12 @@
 import { useMutation } from "@tanstack/react-query"
-import type { RegisterPayload } from "../../types/auth.type"
-import { register } from "../../services/auth.service"
+import type { SignupPayload } from "../../types/auth.type"
 import { saveAuth } from "../../utils/authStorage.utils"
 import api from "../../lib/axios"
+import { signup } from "../../services/auth.service"
 
-export const useRegister = () => {
+export const useSignup = () => {
     return useMutation({
-        mutationFn: (payload: RegisterPayload) => register(payload),
+        mutationFn: async (payload: SignupPayload) => signup(payload),
         onSuccess: (res) => {
             const user = res;
             saveAuth(res);

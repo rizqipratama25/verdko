@@ -12,8 +12,9 @@ export interface LoginPayload {
     password: string;
 }
 
-export interface RegisterPayload {
+export interface SignupPayload {
     name: string;
+    telegram_username: string;
     email: string;
     password: string;
     password_confirmation: string;

@@ -1,21 +1,34 @@
-import { useState, type FormEvent } from "react"
-import Navbar from "../components/Navbar"
-import Modal from "../components/Modal"
+import { useState, type ChangeEvent, type FormEvent } from "react"
+import Navbar from "../components/layout/Navbar"
+import Modal from "../components/common/Modal"
 import { useLogin } from "../hooks/auth/useLogin"
 import toast from "react-hot-toast"
 import { useNavigate } from "react-router-dom"
+import { useLoginModalOpen } from "../stores/ui.store"
+import Button from "../components/common/Button"
+import Input from "../components/common/Input"
+import { buildHandleFormLoginChange } from "../handlers/auth/login.handler"
+import Hero from "../sections/Hero"
+import Problems from "../sections/Problems"
+import Features from "../sections/Features"
+import HowItWorks from "../sections/HowItWorks"
+import ForWho from "../sections/ForWho"
+import CallToAction from "../sections/CallToAction"
+import Footer from "../components/layout/Footer"
 
 const Homepage = () => {
     const navigate = useNavigate()
-    const [showAuthModal, setShowAuthModal] = useState(false)
+    const { loginModalOpen, closeLoginModal } = useLoginModalOpen();
 
     // Login
-    const {mutate: login, isPending} = useLogin();
+    const { mutate: login, isPending } = useLogin();
 
     const [form, setForm] = useState({
         email: "",
         password: ""
     });
+
+    const handleFormChange = (e: ChangeEvent<HTMLInputElement>) => buildHandleFormLoginChange(e, setForm);
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
@@ -28,7 +41,7 @@ const Homepage = () => {
             {
                 onSuccess: () => {
                     toast.success("Login Successful");
-                    navigate('/monitored-products')
+                    navigate('/dashboard')
                 },
                 onError: () => {
                     const message = "Invalid Credentials";
@@ -40,52 +53,26 @@ const Homepage = () => {
 
     return (
         <>
-            <div className="bg-background-primary">
+            <div className="bg-background-primary pt-15">
                 <Navbar />
-
-                <div className="min-h-screen w-full max-w-7xl mx-auto flex flex-col justify-center items-center gap-12">
-                    <div className="flex flex-col justify-center items-center">
-                        <div className="text-8xl font-bold text-primary">Know First</div>
-                        <div className="text-8xl font-bold text-secondary">Act Faster</div>
-                    </div>
-                    <button onClick={() => setShowAuthModal((prev) => !prev)} className="bg-primary hover:bg-primary-hover text-white px-12 py-2 rounded-3xl cursor-pointer">Get Started</button>
-                </div>
-
-
+                <main>
+                    <Hero />
+                    <Problems />
+                    <HowItWorks />
+                    <Features />
+                    <ForWho />
+                    <CallToAction />
+                </main>
+                <Footer />
             </div>
 
-            {showAuthModal && (
-                <Modal setShowAuthModal={setShowAuthModal} modalTitle="Log In">
+            {loginModalOpen && (
+                <Modal setShowModal={() => closeLoginModal()} modalTitle="Log In">
                     <form onSubmit={handleSubmit} className="space-y-4 text-secondary">
-                        <input
-                            type="email"
-                            placeholder="Email"
-                            className="w-full bg-background-primary border border-secondary/50 focus:border-primary/70 focus:ring-1 focus:ring-primary/70 outline-none rounded-lg p-2 transition-all duration-300"
-                            value={form.email}
-                            onChange={(e) => 
-                                setForm((prev) => ({...prev, email: e.target.value}))
-                            }
-                            required
-                        />
+                        <Input name="email" type="email" value={form.email} onChange={handleFormChange} placeholder="Email" required={true} />
+                        <Input name="password" type="password" value={form.password} onChange={handleFormChange} placeholder="Password" required={true} />
 
-                        <input
-                            type="password"
-                            placeholder="Password"
-                            className="w-full bg-background-primary border border-secondary/50 focus:border-primary/70 focus:ring-1 focus:ring-primary/70 outline-none rounded-lg p-2 transition-all duration-300"
-                            value={form.password}
-                            onChange={(e) => 
-                                setForm((prev) => ({...prev, password: e.target.value}))
-                            }
-                            required
-                        />
-
-                        <button
-                            type="submit"
-                            disabled={isPending}
-                            className="w-full bg-primary hover:bg-primary-hover disabled:bg-primary/60 text-white py-2 rounded-lg font-medium  cursor-pointer"
-                        >
-                            {isPending ? "Logging In..." : "Log In"}
-                        </button>
+                        <Button className="py-2" disabled={isPending}>{isPending ? "Logging In..." : "Log In"}</Button>
                     </form>
                 </Modal>
             )}

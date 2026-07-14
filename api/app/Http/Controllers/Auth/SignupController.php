@@ -9,21 +9,23 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
-class RegisterController extends Controller
+class SignupController extends Controller
 {
     use ApiResponse;
 
-    public function register(Request $request)
+    public function signup(Request $request)
     {
         try {
             $request->validate([
                 'name' => 'required|string|max:255',
+                'telegram_username' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users',
                 'password' => 'required|string|min:6|confirmed',
             ]);
 
             $user = User::create([
                 'name' => $request->name,
+                'telegram_username' => $request->telegram_username,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
             ]);

@@ -6,7 +6,7 @@ import api from "../../lib/axios"
 
 export const useLogin = () => {
     return useMutation({
-        mutationFn: (payload: LoginPayload) => login(payload),
+        mutationFn: async (payload: LoginPayload) => login(payload),
         onSuccess: (res) => {
             const user = res;
             saveAuth(res);

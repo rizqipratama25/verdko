@@ -1,8 +1,8 @@
 import { LogOut, Menu, X, type LucideIcon } from "lucide-react";
 import { useState } from "react";
-import { useLogout } from "../hooks/auth/useLogout";
 import { NavLink, useNavigate } from "react-router-dom";
-import { buildHandleLogout } from "../handlers/auth/logout.handler";
+import { useLogout } from "../../hooks/auth/useLogout";
+import { buildHandleLogout } from "../../handlers/auth/logout.handler";
 
 interface MenuItem {
     label: string;

@@ -2,7 +2,7 @@ from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeo
 import redis
 import json
 import requests
-from datetime import datetime
+from datetime import datetime, timezone
 from dotenv import load_dotenv
 import os
 import time
@@ -13,7 +13,7 @@ def send_failed_result(scraper_key, endpoint_url, product_id, reason):
         "monitored_product_id": product_id,
         "status": "failed",
         "error_message": reason,
-        "detected_at": datetime.now().isoformat(),
+        "detected_at": datetime.now(timezone.utc).isoformat(),
     }
     
     headers = {
@@ -61,7 +61,7 @@ def scrape_product(scraper_key, endpoint_url, product):
                 "monitored_product_id": product["id"],
                 "price": price,
                 "status": "success",
-                "detected_at": datetime.now().isoformat(),
+                "detected_at": datetime.now(timezone.utc).isoformat(),
             }
             
             headers = {

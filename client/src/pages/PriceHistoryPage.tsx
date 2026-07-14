@@ -1,8 +1,9 @@
 import { format } from "date-fns";
-import DataTable from "../components/DataTable";
+import DataTable from "../components/dashboard/DataTable";
 import { usePriceHistories } from "../hooks/priceHistory/usePriceHistories"
 import type { Pricehistory } from "../types/priceHistory.type";
 import { rupiahFormat } from "../utils/rupiahFormat.utils";
+import PageHeader from "../components/dashboard/PageHeader";
 
 const PriceHistoryPage = () => {
   const { data: priceHistories = [], isLoading } = usePriceHistories();
@@ -34,6 +35,7 @@ const PriceHistoryPage = () => {
   
   return (
     <div>
+      <PageHeader title="Price History" description="Track historical price changes for your monitored products." />
       <DataTable columns={priceHistoriesColumns} data={priceHistories} />
     </div>
   )
