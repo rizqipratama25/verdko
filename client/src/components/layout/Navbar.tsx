@@ -1,8 +1,8 @@
 import { ArrowRight } from "lucide-react"
-import { useLoginModalOpen } from "../../stores/ui.store";
 import Button from "../common/Button";
 import Logo from "../common/Logo";
 import { useActiveSection } from "../../hooks/navbar/useActiveSection";
+import { useNavigate } from "react-router-dom";
 
 const navItems = [
     { id: "hero", label: "" },
@@ -13,7 +13,7 @@ const navItems = [
 ]
 
 const Navbar = () => {
-    const { openLoginModal } = useLoginModalOpen();
+    const navigate = useNavigate();
     const activeSection = useActiveSection(navItems.map((item) => item.id));
 
     return (
@@ -35,7 +35,7 @@ const Navbar = () => {
                     ))}
                 </div>
                 <div className="flex justify-between items-center">
-                    <Button className="flex items-center gap-2 px-4 py-2 text-sm" onClick={() => openLoginModal()}>
+                    <Button className="flex items-center gap-2 px-4 py-2 text-sm" onClick={() => navigate("/signup")}>
                         Start Monitoring
                         <ArrowRight className="w-4 h-4" />
                     </Button>

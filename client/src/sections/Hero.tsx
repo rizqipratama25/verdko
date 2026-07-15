@@ -1,9 +1,9 @@
 import { ArrowRight, BellRing } from "lucide-react"
-import { useLoginModalOpen } from "../stores/ui.store"
 import Button from "../components/common/Button";
+import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
-    const { openLoginModal } = useLoginModalOpen();
+    const navigate = useNavigate();
 
     return (
         <section id="hero" className="relative min-h-screen flex justify-center overflow-hidden scroll-mt-64">
@@ -24,7 +24,7 @@ const Hero = () => {
                             <span className="font-geist font-bold text-7xl text-primary">Price Change Again</span>
                         </div>
                         <span className="font-inter font-light text-xl text-text-primary text-center animate-fade-in animation-delay-300">Stop checking marketplace listings manually. Verdko automatically monitors<br />competitor prices and sends Telegram alerts whenever competitor prices change.</span>
-                        <Button className="flex items-center gap-2 px-4 py-3 text-md animate-fade-in animation-delay-400" onClick={() => openLoginModal()}>
+                        <Button className="flex items-center gap-2 px-4 py-3 text-md animate-fade-in animation-delay-400" onClick={() => navigate("/signup")}>
                             Start Free Monitoring
                             <ArrowRight className="w-5 h-5" />
                         </Button>

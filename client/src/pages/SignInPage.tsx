@@ -1,46 +1,31 @@
 import { useNavigate } from "react-router-dom"
-import Button from "../components/common/Button"
-import Input from "../components/common/Input"
-import Logo from "../components/common/Logo"
 import { useLogin } from "../hooks/auth/useLogin"
-import { useState, type ChangeEvent, type FormEvent } from "react"
-import { buildHandleFormLoginChange } from "../handlers/auth/login.handler"
-import toast from "react-hot-toast"
+import { useState, type ChangeEvent } from "react"
+import { buildHandleFormLoginChange, buildHandleLoginSubmit } from "../handlers/auth/login.handler"
+import type { LoginPayload } from "../types/auth.type"
+import Logo from "../components/common/Logo"
 import { ArrowLeft } from "lucide-react"
+import Input from "../components/common/Input"
+import Button from "../components/common/Button"
 
 const SignInPage = () => {
   const navigate = useNavigate()
 
   // Login
-  const { mutate: login, isPending } = useLogin();
+  const { mutateAsync: login, isPending } = useLogin();
 
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<LoginPayload>({
+    email: "",
+    password: ""
+  });
+
+  const resetForm = () => setForm({
     email: "",
     password: ""
   });
 
   const handleFormChange = (e: ChangeEvent<HTMLInputElement>) => buildHandleFormLoginChange(e, setForm);
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-
-    login(
-      {
-        email: form.email,
-        password: form.password
-      },
-      {
-        onSuccess: () => {
-          toast.success("Login Successful");
-          navigate('/dashboard')
-        },
-        onError: () => {
-          const message = "Invalid Credentials";
-          toast.error(message);
-        }
-      }
-    )
-  }
+  const handleLoginSubmit = buildHandleLoginSubmit(form, login, { resetForm }, navigate);
 
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-11">
@@ -57,12 +42,13 @@ const SignInPage = () => {
           </a>
           <div className="w-full flex flex-col items-center gap-4">
             <span className="font-geist font-medium text-2xl text-text-primary text-center">Welcome Back</span>
-            <form onSubmit={handleSubmit} className="w-lg space-y-4 text-secondary">
+            <form onSubmit={handleLoginSubmit} className="w-lg space-y-4 text-secondary">
               <Input name="email" type="email" value={form.email} onChange={handleFormChange} placeholder="Email" required={true} />
               <Input name="password" type="password" value={form.password} onChange={handleFormChange} placeholder="Password" required={true} />
 
               <Button className="py-2" disabled={isPending}>{isPending ? "Logging In..." : "Log In"}</Button>
             </form>
+            
           </div>
           <span className="text-center text-text-primary">By continuing, you agree to Verdko's <a href="/" className="font-geist font-medium text-primary underline">Terms of Service</a> and <a href="/" className="font-geist font-medium text-primary underline">Privacy Policy</a>.</span>
         </div>

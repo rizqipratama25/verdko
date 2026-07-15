@@ -33,17 +33,6 @@ def scrape_product(browser, scraper_key, endpoint_url, product):
     context = None
     
     try:
-        target_url = product["product_url"]
-        
-        if "tk.tokopedia.com" in target_url:
-            try:
-                headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
-                response_resolve = requests.head(target_url, allow_redirects=True, headers=headers, timeout=10)
-                target_url = response_resolve.url
-                print("Resolved URL:", target_url)
-            except Exception as e:
-                print("Failed to resolve URL:", str(e))
-        
         # Samarkan User-Agent agar tidak terlihat seperti headless robot
         user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
         
@@ -107,7 +96,7 @@ def scrape_product(browser, scraper_key, endpoint_url, product):
         """)
 
         response = page.goto(
-            target_url,
+            "https://www.tokopedia.com/makarizo/makarizo-barber-daily-2-in-1-hair-tonic-140-ml?utm_campaign=PDP-jflg8g4uul6s-11854891608--10000&utm_source=salinlink&utm_medium=share",
             timeout=60000,
             wait_until="domcontentloaded"
         )

@@ -11,9 +11,7 @@ export const buildHandleFormSignupChange = (e: ChangeEvent<HTMLInputElement>, se
 
 export const buildHandleSignupSubmit = (
     form: SignupPayload,
-    signup: (
-        payload: SignupPayload
-    ) => Promise<AuthUser>,
+    signup: (payload: SignupPayload) => Promise<AuthUser>,
     helpers: {
         resetForm: () => void;
     },

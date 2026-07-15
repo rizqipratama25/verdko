@@ -19,7 +19,7 @@ class StartCommand extends Command
         SaveUserTelegramInfo::dispatch($username, $chatId);
 
         $this->replyWithMessage([
-            'text' => "👋 Hello, I'm opstrace bot. Please wait a moment..."
+            'text' => "👋 Hello, I'm Verdko Bot. Please wait a moment..."
         ]);
     }
 }
