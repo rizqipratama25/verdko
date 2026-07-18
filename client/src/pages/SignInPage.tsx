@@ -48,7 +48,7 @@ const SignInPage = () => {
 
               <Button className="py-2" disabled={isPending}>{isPending ? "Logging In..." : "Log In"}</Button>
             </form>
-            
+            <span>Don't have an account? <a href="/signup" className="font-geist font-medium text-primary underline">Sign Up</a></span>
           </div>
           <span className="text-center text-text-primary">By continuing, you agree to Verdko's <a href="/" className="font-geist font-medium text-primary underline">Terms of Service</a> and <a href="/" className="font-geist font-medium text-primary underline">Privacy Policy</a>.</span>
         </div>

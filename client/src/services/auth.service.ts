@@ -20,3 +20,11 @@ export const me = async (): Promise<AuthUser> => {
 export const logout = async (): Promise<void> => {
     await api.post("/auth/logout");
 }
+
+export const verifyEmail = async (verifyUrl: string) => {
+    await api.get(decodeURIComponent(verifyUrl));
+}
+
+export const resendVerificationEmail = async () => {
+    await api.post("/email/verification-notification");
+}

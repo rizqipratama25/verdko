@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Auth;
 
 use App\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Jobs\ProcessSignupMail;
 use App\Models\User;
 use Exception;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class SignupController extends Controller
@@ -18,7 +21,7 @@ class SignupController extends Controller
         try {
             $request->validate([
                 'name' => 'required|string|max:255',
-                'telegram_username' => 'required|string|max:255',
+                'telegram_username' => 'required|string|max:255|unique:users',
                 'email' => 'required|string|email|max:255|unique:users',
                 'password' => 'required|string|min:6|confirmed',
             ]);
@@ -29,6 +32,8 @@ class SignupController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
             ]);
+
+            ProcessSignupMail::dispatch($user);
 
             $token = $user->createToken('api-token')->plainTextToken;
             $user['token'] = $token;

@@ -26,7 +26,6 @@ export const buildHandleSignupSubmit = (
 
         toast.success("Signup successful!", { id: toastId });
         helpers.resetForm();
-        navigate("/dashboard");
     } catch (error: any) {
         const message = error.response?.data?.errors || error.response?.data?.message || "Something went wrong!";
         toast.error(message, { id: toastId });
