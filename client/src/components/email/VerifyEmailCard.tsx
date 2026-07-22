@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { getUser } from "../../utils/authStorage.utils";
 import { useResendVerificationEmail } from "../../hooks/email/useResendVerificationEmail";
 import { buildHandleResendVerificationEmail } from "../../handlers/email/email.handler";
+import Button from "../common/Button";
 
 interface Props {
     title: string;
@@ -32,9 +33,7 @@ const VerifyEmailCard = ({ title, message, children }: Props) => {
                 </div>
                 <span className="font-inter font-light text-md text-text-secondary text-center">Just click on the link in that email to complete your signup. If you don't see it, you may need to <span className="font-semibold text-primary">check your spam</span> folder.</span>
                 <span className="font-inter font-light text-md text-text-secondary text-center">Still can't find the email? No problem.</span>
-                <button className="cursor-pointer bg-primary hover:bg-primary-hover text-surface px-4 py-2 rounded-lg" onClick={handleResendVerificationEmail}>
-                    Resend Verification Email
-                </button>
+                <Button className="px-4 py-2" onClick={handleResendVerificationEmail}>Resend Verification Email</Button>
             </div>
         </div>
     )

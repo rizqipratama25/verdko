@@ -20,7 +20,7 @@ export const buildHandleLogout = (
                 }
             },
             onError: (err: any) => {
-                const message = err?.response?.data?.message ?? err.message;
+                const message = err?.response?.data?.message ?? err.message ?? "Something went wrong";
                 toast.error(message);
             }
         })

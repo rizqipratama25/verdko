@@ -1,33 +1,30 @@
-import { Navigate, useNavigate } from "react-router-dom"
-import { useLogin } from "../hooks/auth/useLogin"
+import { Navigate } from "react-router-dom"
 import { useState, type ChangeEvent } from "react"
-import { buildHandleFormLoginChange, buildHandleLoginSubmit } from "../handlers/auth/login.handler"
-import type { LoginPayload } from "../types/auth.type"
+import type { ForgotPasswordPayload } from "../types/auth.type"
 import Logo from "../components/common/Logo"
 import { ArrowLeft } from "lucide-react"
 import Input from "../components/common/Input"
 import Button from "../components/common/Button"
 import { getUser } from "../utils/authStorage.utils"
+import { buildHandleForgotPasswordSubmit, buildHandleFormForgotPasswordChange } from "../handlers/auth/forgotPassword.handler"
+import { useForgotPassword } from "../hooks/auth/useForgotPassword"
 
-const SignInPage = () => {
+const ForgotPasswordPage = () => {
   const user = getUser();
-  const navigate = useNavigate()
 
-  // Login
-  const { mutateAsync: login, isPending } = useLogin();
+  // Reset Password
+  const { mutateAsync: forgotPassword, isPending } = useForgotPassword();
 
-  const [form, setForm] = useState<LoginPayload>({
-    email: "",
-    password: ""
+  const [form, setForm] = useState<ForgotPasswordPayload>({
+    email: ""
   });
 
   const resetForm = () => setForm({
-    email: "",
-    password: ""
+    email: ""
   });
 
-  const handleFormChange = (e: ChangeEvent<HTMLInputElement>) => buildHandleFormLoginChange(e, setForm);
-  const handleLoginSubmit = buildHandleLoginSubmit(form, login, { resetForm }, navigate);
+  const handleFormChange = (e: ChangeEvent<HTMLInputElement>) => buildHandleFormForgotPasswordChange(e, setForm);
+  const handleForgotPasswordSubmit = buildHandleForgotPasswordSubmit(form, forgotPassword, { resetForm });
 
   if (user) return <Navigate to="/dashboard" />
 
@@ -44,17 +41,17 @@ const SignInPage = () => {
             <ArrowLeft className="w-5 h-5" />
             Home
           </a>
-          <div className="w-full flex flex-col items-center gap-4">
-            <span className="font-geist font-medium text-2xl text-text-primary text-center">Welcome Back</span>
-            <form onSubmit={handleLoginSubmit} className="w-lg space-y-4 text-secondary">
+          <div className="w-full flex flex-col items-center gap-5">
+            <div className="w-full flex flex-col items-center">
+              <span className="font-geist font-medium text-2xl text-text-primary text-center">Reset Your Password</span>
+              <span className="font-inter font-light text-md text-text-secondary text-center">Enter your email address and we will send you <br />password reset link.</span>
+            </div>
+            <form onSubmit={handleForgotPasswordSubmit} className="w-lg space-y-4 text-secondary">
               <Input label="Email" name="email" type="email" value={form.email} onChange={handleFormChange} placeholder="Enter your email" required={true} />
-              <Input label="Password" name="password" type="password" value={form.password} onChange={handleFormChange} placeholder="Enter your password" required={true}>
-                <a href="/forgot-password" className="font-inter text-primary underline">Forgot Password?</a>
-              </Input>
 
-              <Button className="py-2" disabled={isPending}>{isPending ? "Logging In..." : "Log In"}</Button>
+              <Button className="py-2" disabled={isPending}>{isPending ? "Sending..." : "Send Reset Code"}</Button>
             </form>
-            <span>Don't have an account? <a href="/signup" className="font-geist font-medium text-primary underline">Sign Up</a></span>
+            <span>Already have an account? <a href="/login" className="font-geist font-medium text-primary underline">Login</a></span>
           </div>
           <span className="text-center text-text-primary">By continuing, you agree to Verdko's <a href="/" className="font-geist font-medium text-primary underline">Terms of Service</a> and <a href="/" className="font-geist font-medium text-primary underline">Privacy Policy</a>.</span>
         </div>
@@ -63,4 +60,4 @@ const SignInPage = () => {
   )
 }
 
-export default SignInPage
+export default ForgotPasswordPage

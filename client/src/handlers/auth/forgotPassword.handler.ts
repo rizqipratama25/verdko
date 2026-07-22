@@ -1,28 +1,28 @@
 import type { ChangeEvent, Dispatch, FormEvent, SetStateAction } from "react";
-import type { AuthUser, SignupPayload } from "../../types/auth.type";
+import type { ForgotPasswordPayload } from "../../types/auth.type";
 import toast from "react-hot-toast";
 
 // Form Change
-export const buildHandleFormSignupChange = (e: ChangeEvent<HTMLInputElement>, setForm: Dispatch<SetStateAction<SignupPayload>>) => {
+export const buildHandleFormForgotPasswordChange = (e: ChangeEvent<HTMLInputElement>, setForm: Dispatch<SetStateAction<ForgotPasswordPayload>>) => {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
 }
 
-export const buildHandleSignupSubmit = (
-    form: SignupPayload,
-    signup: (payload: SignupPayload) => Promise<AuthUser>,
+export const buildHandleForgotPasswordSubmit = (
+    form: ForgotPasswordPayload,
+    forgotPassword: (payload: ForgotPasswordPayload) => Promise<void>,
     helpers: {
         resetForm: () => void;
     },
 ) => async (e: FormEvent) => {
     e.preventDefault();
 
-    const toastId = toast.loading("Signing up...");
+    const toastId = toast.loading("Please wait...");
 
     try {
-        await signup(form);
+        await forgotPassword(form);
 
-        toast.success("Signup successful!", { id: toastId });
+        toast.success("Check your email!", { id: toastId });
         helpers.resetForm();
     } catch (error: any) {
         const message = error.response?.data?.errors || error.response?.data?.message || "Something went wrong!";

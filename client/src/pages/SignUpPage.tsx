@@ -2,16 +2,17 @@ import { ArrowLeft } from "lucide-react"
 import Logo from "../components/common/Logo"
 import Input from "../components/common/Input"
 import Button from "../components/common/Button"
-import { useNavigate } from "react-router-dom"
+import { Navigate } from "react-router-dom"
 import { useSignup } from "../hooks/auth/useSignup"
 import { useState, type ChangeEvent } from "react"
 import { buildHandleFormSignupChange, buildHandleSignupSubmit } from "../handlers/auth/signup.handler"
 import type { SignupPayload } from "../types/auth.type"
+import { getUser } from "../utils/authStorage.utils"
 
 const SignUpPage = () => {
-  const navigate = useNavigate()
+  const user = getUser();
 
-  // Login
+  // Signup
   const { mutateAsync: signup, isPending } = useSignup();
 
   const [form, setForm] = useState<SignupPayload>({
@@ -30,8 +31,9 @@ const SignUpPage = () => {
   });
 
   const handleFormChange = (e: ChangeEvent<HTMLInputElement>) => buildHandleFormSignupChange(e, setForm);
-  const handleSignupSubmit = buildHandleSignupSubmit(form, signup, { resetForm }, navigate);
+  const handleSignupSubmit = buildHandleSignupSubmit(form, signup, { resetForm });
 
+  if (user) return <Navigate to="/dashboard" />
 
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-11">
@@ -49,11 +51,11 @@ const SignUpPage = () => {
           <div className="w-full flex flex-col items-center gap-4">
             <span className="font-geist font-medium text-2xl text-text-primary text-center">Get Started</span>
             <form onSubmit={handleSignupSubmit} className="w-lg space-y-4 text-secondary">
-              <Input name="name" type="text" value={form.name} onChange={handleFormChange} placeholder="Name" required={true} />
-              <Input name="telegram_username" type="text" value={form.telegram_username} onChange={handleFormChange} placeholder="Telegram Username" required={true} />
-              <Input name="email" type="email" value={form.email} onChange={handleFormChange} placeholder="Email" required={true} />
-              <Input name="password" type="password" value={form.password} onChange={handleFormChange} placeholder="Password" required={true} />
-              <Input name="password_confirmation" type="password" value={form.password_confirmation} onChange={handleFormChange} placeholder="Password Confirmation" required={true} />
+              <Input label="Name" name="name" type="text" value={form.name} onChange={handleFormChange} placeholder="Enter your name" required={true} />
+              <Input label="Telegram Username" name="telegram_username" type="text" value={form.telegram_username} onChange={handleFormChange} placeholder="Enter your telegram username" required={true} />
+              <Input label="Email" name="email" type="email" value={form.email} onChange={handleFormChange} placeholder="Enter your email" required={true} />
+              <Input label="Password" name="password" type="password" value={form.password} onChange={handleFormChange} placeholder="Enter your password" required={true} />
+              <Input label="Password Confirmation" name="password_confirmation" type="password" value={form.password_confirmation} onChange={handleFormChange} placeholder="Confirm your password" required={true} />
 
               <Button className="py-2" disabled={isPending}>{isPending ? "Signing Up..." : "Sign Up"}</Button>
             </form>

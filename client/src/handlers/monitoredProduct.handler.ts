@@ -1,6 +1,7 @@
 import type { ChangeEvent, Dispatch, FormEvent, SetStateAction } from "react";
 import type { MonitoredProduct, MonitoredProductPayload } from "../types/monitoredProduct.type";
 import toast from "react-hot-toast";
+import { isSupportedProductUrl } from "../utils/validateUrl.utils";
 
 // Form Change
 export const buildHandleFormMonitoredProductChange = (e: ChangeEvent<HTMLInputElement>, setForm: Dispatch<SetStateAction<MonitoredProductPayload>>) => {
@@ -24,9 +25,14 @@ export const buildHandleSubmitNewMonitoredProduct = (
     const toastId = toast.loading("Creating new monitored product...");
 
     try {
+        if (!isSupportedProductUrl(form.product_url)) {
+            toast.error("Invalid product URL!", { id: toastId });
+            return;
+        }
+
         await createMonitoredProduct(form);
 
-        toast.success("Monitored product created successfully!", {id: toastId});
+        toast.success("Monitored product created successfully!", { id: toastId });
         helpers.setShowAddModal(false);
         helpers.resetForm();
     } catch (error: any) {
@@ -58,12 +64,17 @@ export const buildHandleEditMonitoredProduct = (
     const toastId = toast.loading("Updating monitored product...");
 
     try {
+        if (!isSupportedProductUrl(form.product_url)) {
+            toast.error("Invalid product URL!", { id: toastId });
+            return;
+        }
+
         await updateMonitoredProduct({
             id: editingId,
             payload: form
         });
 
-        toast.success("Monitored product updated successfully!", {id: toastId});
+        toast.success("Monitored product updated successfully!", { id: toastId });
         helpers.setShowEditModal(false);
         helpers.setEditingId(null);
         helpers.resetForm();

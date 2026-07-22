@@ -47,12 +47,12 @@ const MonitoredProductPage = () => {
   // Form
   const [form, setForm] = useState<MonitoredProductPayload>({
     name: "",
-    marketplace: "",
+    marketplace: "Tokopedia",
     product_url: ""
   });
   const resetForm = () => setForm({
     name: "",
-    marketplace: "",
+    marketplace: "Tokopedia",
     product_url: ""
   });
 
@@ -96,9 +96,19 @@ const MonitoredProductPage = () => {
     {
       header: 'Last Checked',
       accessor: 'last_checked_at',
-      render: (row: MonitoredProduct) => <span title={format(new Date(row.last_checked_at), "dd MMM yyyy HH:mm:ss")} className="text-sm font-medium text-text-primary">
-        {formatDistanceToNow(new Date(row.last_checked_at), { addSuffix: true })}
-      </span>
+      render: (row: MonitoredProduct) =>
+        row.last_checked_at ? (
+          <span
+            className="text-sm font-medium text-text-primary"
+            title={format(new Date(row.last_checked_at), "dd MMM yyyy HH:mm:ss")}
+          >
+            {formatDistanceToNow(new Date(row.last_checked_at), {
+              addSuffix: true,
+            })}
+          </span>
+        ) : (
+          <span className="text-sm font-medium text-text-muted">Awaiting First Check</span>
+        )
     },
     {
       header: 'URL',
@@ -148,9 +158,9 @@ const MonitoredProductPage = () => {
       {showAddModal && (
         <Modal setShowModal={setShowAddModal} modalTitle="Add Monitored Product">
           <form onSubmit={handleSubmitNewMonitoredProduct} className="space-y-4 text-text-primary">
-            <Input name="name" value={form.name} onChange={handleFormChange} placeholder="Product Name" type="text" required={true} />
-            <Input name="marketplace" value={form.marketplace} onChange={handleFormChange} placeholder="Marketplace" type="text" required={true} />
-            <Input name="product_url" value={form.product_url} onChange={handleFormChange} placeholder="Product URL" type="text" required={true} />
+            <Input label="Name" name="name" value={form.name} onChange={handleFormChange} placeholder="Enter the product name" type="text" required={true} />
+            <Input label="Marketplace" name="marketplace" value="Tokopedia" onChange={handleFormChange} placeholder="Enter the marketplace name" type="text" required={true} disabled={true} />
+            <Input label="Product URL" name="product_url" value={form.product_url} onChange={handleFormChange} placeholder="Enter the product URL" type="text" required={true} />
 
             <Button className="py-2" disabled={isCreatingMonitoredProduct}>
               {isCreatingMonitoredProduct ? "Creating..." : "Create"}
@@ -162,9 +172,9 @@ const MonitoredProductPage = () => {
       {showEditModal && (
         <Modal setShowModal={setShowEditModal} modalTitle="Edit Monitored Product">
           <form onSubmit={handleEditMonitoredProduct} className="space-y-4 text-text-primary">
-            <Input name="name" value={form.name} onChange={handleFormChange} placeholder="Product Name" type="text" required={true} />
-            <Input name="marketplace" value={form.marketplace} onChange={handleFormChange} placeholder="Marketplace" type="text" required={true} />
-            <Input name="product_url" value={form.product_url} onChange={handleFormChange} placeholder="Product URL" type="text" required={true} />
+            <Input label="Name" name="name" value={form.name} onChange={handleFormChange} placeholder="Enter the product name" type="text" required={true} />
+            <Input label="Marketplace" name="marketplace" value="Tokopedia" onChange={handleFormChange} placeholder="Enter the marketplace name" type="text" required={true} disabled={true} />
+            <Input label="Product URL" name="product_url" value={form.product_url} onChange={handleFormChange} placeholder="Enter the product URL" type="text" required={true} />
 
             <Button className="py-2" disabled={isUpdatingMonitoredProduct}>
               {isUpdatingMonitoredProduct ? "Updating..." : "Update"}

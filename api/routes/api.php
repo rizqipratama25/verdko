@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Auth\DeleteAccountController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\MeController;
@@ -24,17 +26,21 @@ Route::prefix('telegram')->group(function () {
 });
 
 Route::prefix('auth')->group(function () {
-    Route::post('/signup', [SignupController::class, 'signup']);
-    Route::post('/login', [LoginController::class, 'login']);
+    Route::post('/signup', [SignupController::class, 'signup'])->middleware('throttle:signup');
+    Route::post('/login', [LoginController::class, 'login'])->middleware('throttle:login');
+
+    Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLink'])->middleware('throttle:email-resend');
+    Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->middleware('throttle:forgot-password');
 
     Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::get('/me', [MeController::class, 'me']);
         Route::put('/edit-me', [MeController::class, 'editMeInfo']);
         Route::post('/logout', [LogoutController::class, 'logout']);
+        Route::post('/delete-account', [DeleteAccountController::class, 'deleteAccount']);
     });
 });
 
-Route::post('/email/verification-notification', [EmailVerificationController::class, 'resend'])->middleware(['auth:sanctum'])->name('verification.send');
+Route::post('/email/verification-notification', [EmailVerificationController::class, 'resend'])->middleware(['auth:sanctum', 'throttle:email-resend'])->name('verification.send');
 Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])->middleware(['signed'])->name('verification.verify');
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
