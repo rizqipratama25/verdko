@@ -1,4 +1,5 @@
 import type { ComponentType } from "react";
+import { clearAuth } from "../../utils/authStorage.utils";
 
 interface Props {
   icon: ComponentType<{ size?: number }>;
@@ -7,6 +8,8 @@ interface Props {
 }
 
 const VerifyEmailStatusCard = ({icon: Icon, title, message}: Props) => {
+  clearAuth();
+
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-background-primary">
       <div className="flex flex-col items-center bg-surface w-2xl shadow-lg rounded-lg gap-6 py-8 px-16">

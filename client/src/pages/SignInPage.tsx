@@ -7,10 +7,11 @@ import Logo from "../components/common/Logo"
 import { ArrowLeft } from "lucide-react"
 import Input from "../components/common/Input"
 import Button from "../components/common/Button"
-import { getUser } from "../utils/authStorage.utils"
+import { getUser, getVerifiedAt } from "../utils/authStorage.utils"
 
 const SignInPage = () => {
   const user = getUser();
+  const verifiedAt = getVerifiedAt();
   const navigate = useNavigate()
 
   // Login
@@ -29,7 +30,7 @@ const SignInPage = () => {
   const handleFormChange = (e: ChangeEvent<HTMLInputElement>) => buildHandleFormLoginChange(e, setForm);
   const handleLoginSubmit = buildHandleLoginSubmit(form, login, { resetForm }, navigate);
 
-  if (user) return <Navigate to="/dashboard" />
+  if (user && verifiedAt) return <Navigate to="/dashboard" />
 
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-11">
