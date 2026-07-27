@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\ApiResponse;
+use App\Http\Resources\PriceHistoryResource;
 use App\Models\Alert;
 use App\Models\PriceHistory;
 use Exception;
@@ -24,7 +25,7 @@ class PriceHistoryController extends Controller
                 ->latest()
                 ->paginate();
 
-            return $this->successResponse($priceHistories, "Price histories retrieved successfully");
+            return $this->paginatedResponse(PriceHistoryResource::collection($priceHistories), "Price histories retrieved successfully");
         } catch (Exception $e) {
             return $this->errorResponse("Failed to retrieve price histories", 500, $e->getMessage());
         }

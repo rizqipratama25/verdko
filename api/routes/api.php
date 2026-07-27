@@ -1,14 +1,20 @@
 <?php
 
-use App\Http\Controllers\AlertController;
+use App\Http\Controllers\Auth\DeleteAccountController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\MeController;
-use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\SignupController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\MonitoredProductController;
 use App\Http\Controllers\PriceHistoryController;
 use App\Http\Controllers\Telegram\TelegramController;
-use Illuminate\Http\Request;
+use App\Jobs\ProcessWelcomeMail;
+use App\Mail\WelcomeMail;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('telegram')->group(function () {
@@ -20,17 +26,26 @@ Route::prefix('telegram')->group(function () {
 });
 
 Route::prefix('auth')->group(function () {
-    Route::post('/register', [RegisterController::class, 'register']);
-    Route::post('/login', [LoginController::class, 'login']);
+    Route::post('/signup', [SignupController::class, 'signup'])->middleware('throttle:signup');
+    Route::post('/login', [LoginController::class, 'login'])->middleware('throttle:login');
 
-    Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLink'])->middleware('throttle:email-resend');
+    Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->middleware('throttle:forgot-password');
+
+    Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::get('/me', [MeController::class, 'me']);
         Route::put('/edit-me', [MeController::class, 'editMeInfo']);
         Route::post('/logout', [LogoutController::class, 'logout']);
+        Route::post('/delete-account', [DeleteAccountController::class, 'deleteAccount']);
     });
 });
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::post('/email/verification-notification', [EmailVerificationController::class, 'resend'])->middleware(['auth:sanctum', 'throttle:email-resend'])->name('verification.send');
+Route::get('/email/verify/{id}/{hash}', [EmailVerificationController::class, 'verify'])->middleware(['signed'])->name('verification.verify');
+
+Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+    Route::get('/summary', [DashboardController::class, 'summary']);
+
     Route::get('/monitored-products', [MonitoredProductController::class, 'index']);
     Route::post('/monitored-product', [MonitoredProductController::class, 'store']);
     Route::put('/monitored-product/{monitoredProduct}', [MonitoredProductController::class, 'update']);
@@ -40,3 +55,24 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::post('/monitoring-results', [PriceHistoryController::class, 'store'])->middleware('scraper.key');
+
+Route::get('/send-email', function () {
+    $users = [
+        ['email' => 'john@email.com', 'password' => '123'],
+        ['email' => 'jane@email.com', 'password' => '123'],
+        ['email' => 'jim@email.com', 'password' => '123'],
+        ['email' => 'jake@email.com', 'password' => '123'],
+        ['email' => 'ben@email.com', 'password' => '123'],
+        ['email' => 'ted@email.com', 'password' => '123'],
+        ['email' => 'blen@email.com', 'password' => '123'],
+        ['email' => 'mary@email.com', 'password' => '123'],
+        ['email' => 'bono@email.com', 'password' => '123'],
+        ['email' => 'didi@email.com', 'password' => '123'],
+    ];
+
+    foreach ($users as $user) {
+        ProcessWelcomeMail::dispatch($user);
+    }
+
+    // Mail::to("rizqipratama.se@gmail.com")->send(new WelcomeMail());
+});

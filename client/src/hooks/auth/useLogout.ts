@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query"
 import { logout } from "../../services/auth.service"
-import { clearAuth } from "../../utils/authStorage"
+import { clearAuth } from "../../utils/authStorage.utils"
 import api from "../../lib/axios"
 
 export const useLogout = () => {

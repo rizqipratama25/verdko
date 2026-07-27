@@ -6,6 +6,7 @@ use App\ApiResponse;
 use App\Jobs\MonitoringJob;
 use App\Jobs\SendProductToScraper;
 use App\Models\MonitoredProduct;
+use App\Rules\SupportedProductUrl;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -23,7 +24,7 @@ class MonitoredProductController extends Controller
                 ->latest()
                 ->paginate();
 
-            return $this->successResponse($monitoredProducts, "Monitored products retrieved successfully");
+            return $this->paginatedResponse($monitoredProducts, "Monitored products retrieved successfully");
         } catch (Exception $e) {
             return $this->errorResponse("Failed to retrieve monitored products", 500, $e->getMessage());
         }
@@ -35,10 +36,18 @@ class MonitoredProductController extends Controller
     public function store(Request $request)
     {
         try {
+            $user = $request->user();
+
+            $currentCount = $user->monitoredProducts()->count();
+
+            if ($currentCount >= 5) {
+                return $this->errorResponse(message: 'You have reached the maximum number of monitored products for your plan.', code: 403);
+            }
+
             $validated = $request->validate([
                 'name' => ['required', 'string', 'max:255'],
                 'marketplace' => ['required', 'string', 'max:100'],
-                'product_url' => ['required', 'url']
+                'product_url' => ['required', 'url', new SupportedProductUrl()]
             ]);
 
             $monitoredProduct = MonitoredProduct::create([
@@ -71,7 +80,7 @@ class MonitoredProductController extends Controller
             $validated = $request->validate([
                 'name' => ['sometimes', 'string', 'max:255'],
                 'marketplace' => ['sometimes', 'string', 'max:100'],
-                'product_url' => ['sometimes', 'url']
+                'product_url' => ['sometimes', 'url', new SupportedProductUrl()]
             ]);
 
             $monitoredProduct->update($validated);

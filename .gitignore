@@ -1,3 +1,4 @@
 asset/
 node_modules/
-opstrace_client_react/
+scraper_pip/
+*.env

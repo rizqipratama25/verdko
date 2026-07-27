@@ -1,0 +1,46 @@
+<?php
+
+namespace App\Http\Controllers\Auth;
+
+use App\ApiResponse;
+use App\Http\Controllers\Controller;
+use App\Jobs\ProcessSignupMail;
+use App\Models\User;
+use Exception;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+
+class SignupController extends Controller
+{
+    use ApiResponse;
+
+    public function signup(Request $request)
+    {
+        try {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'telegram_username' => 'required|string|max:255|unique:users',
+                'email' => 'required|string|email|max:255|unique:users',
+                'password' => 'required|string|min:6|confirmed',
+            ]);
+
+            $user = User::create([
+                'name' => $request->name,
+                'telegram_username' => $request->telegram_username,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
+
+            ProcessSignupMail::dispatch($user);
+
+            $token = $user->createToken('api-token')->plainTextToken;
+            $user['token'] = $token;
+
+            return $this->successResponse($user, "User registered successfully");
+        } catch (Exception $e) {
+            return $this->errorResponse('Failed to register user', 500, $e->getMessage());
+        }
+    }
+}

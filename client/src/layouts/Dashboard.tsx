@@ -1,17 +1,17 @@
-import { Box, Tag } from "lucide-react"
-import { getUser } from "../utils/authStorage"
-import DashboardSidebar from "../components/DashboardSidebar";
-import DashboardHeader from "../components/DashboardHeader";
+import { Box, LayoutDashboard, Tag } from "lucide-react"
+import { getUser } from "../utils/authStorage.utils"
+import DashboardHeader from "../components/dashboard/DashboardHeader";
 import { Outlet } from "react-router-dom";
+import DashboardSidebar from "../components/dashboard/DashboardSidebar";
 
 const menuItems = [
+  {label: "Dashboard", to: "/dashboard", icon: LayoutDashboard},
   {label: "Monitored Products", to: "/monitored-products", icon: Box},
   {label: "Price History", to: "/price-histories", icon: Tag}
 ]
 
 const Dashboard = () => {
   const {name, email} = getUser();
-
 
   return (
     <div>

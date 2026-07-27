@@ -1,22 +1,42 @@
 import api from "../lib/axios";
 import type { ApiResponse } from "../types/apiResponse.type";
-import type { AuthUser, LoginPayload, RegisterPayload } from "../types/auth.type";
+import type { AuthUser, DeleteAccountPayload, ForgotPasswordPayload, LoginPayload, ResetPasswordPayload, SignupPayload } from "../types/auth.type";
 
-export const login = async (payload: LoginPayload): Promise<AuthUser> => {
-    const res = await api.post<ApiResponse<AuthUser>>("/auth/login", payload);
-    return res.data.data;
+export const signup = async (payload: SignupPayload): Promise<AuthUser> => {
+    const { data: apiResponse } = await api.post<ApiResponse<AuthUser>>("/auth/signup", payload);
+    return apiResponse.data;
 };
 
-export const register = async (payload: RegisterPayload): Promise<AuthUser> => {
-    const res = await api.post<ApiResponse<AuthUser>>("/auth/register", payload);
-    return res.data.data;
-}
+export const login = async (payload: LoginPayload): Promise<AuthUser> => {
+    const { data: apiResponse } = await api.post<ApiResponse<AuthUser>>("/auth/login", payload);
+    return apiResponse.data;
+};
 
 export const me = async (): Promise<AuthUser> => {
-    const res = await api.get<ApiResponse<AuthUser>>("/auth/me");
-    return res.data.data;
+    const { data: apiResponse } = await api.get<ApiResponse<AuthUser>>("/auth/me");
+    return apiResponse.data;
 }
 
 export const logout = async (): Promise<void> => {
     await api.post("/auth/logout");
+}
+
+export const deleteAccount = async (payload: DeleteAccountPayload): Promise<void> => {
+   await api.post("/auth/delete-account", payload);
+}
+
+export const verifyEmail = async (verifyUrl: string) => {
+    await api.get(decodeURIComponent(verifyUrl));
+}
+
+export const resendVerificationEmail = async () => {
+    await api.post("/email/verification-notification");
+}
+
+export const forgotPassword = async (payload: ForgotPasswordPayload) => {
+    await api.post("/auth/forgot-password", payload);
+}
+
+export const resetPassword = async (payload: ResetPasswordPayload) => {
+    await api.post("/auth/reset-password", payload);
 }
