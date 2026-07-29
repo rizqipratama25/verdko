@@ -1,37 +1,30 @@
-FROM php:8.4-fpm as base
+FROM php:8.4-fpm-bookworm AS base
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     libzip-dev \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
     libicu-dev \
-    libxml2-dev \
-    pkg-config \
-    postgresql-client \
     libpq-dev \
-    git \
+    libbrotli-dev\
     unzip \
+    procps \
+    curl \
+    gosu \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+COPY --from=composer:2.9.8 /usr/bin/composer /usr/local/bin/composer
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
 # Install PHP extensions including sockets
 RUN docker-php-ext-install \
     pdo \
-    pgsql \
     pdo_pgsql \
-    gd \
     bcmath \
     zip \
     intl \
-    soap \
-    exif \
     pcntl \
     sockets \
     && pecl install redis swoole \
@@ -40,14 +33,13 @@ RUN docker-php-ext-install \
 # ============================================
 # Stage: Composer dependencies
 # ============================================
-FROM base as composer-deps
+FROM base AS composer-deps
 
 WORKDIR /usr/share/nginx/html/
 
 COPY composer.json composer.lock ./
 
 RUN composer install \
-    --ignore-platform-req=php \
     --no-dev \
     --no-scripts \
     --no-autoloader \
@@ -56,39 +48,27 @@ RUN composer install \
 # ============================================
 # Stage: Final application
 # ============================================
-FROM base as final
-
-# Install Node.js for asset building
-RUN apt-get update && apt-get install -y \
-    nodejs \
-    npm \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+FROM base AS final
 
 WORKDIR /usr/share/nginx/html/
 
-# Copy vendor from composer-deps stage
-COPY --from=composer-deps /usr/share/nginx/html/vendor ./vendor
+# Copy vendor from composer-deps stage — chown so www-data owns it, not root
+COPY --from=composer-deps --chown=www-data:www-data /usr/share/nginx/html/vendor ./vendor
 
-# Copy application files
-COPY . ./
-
-# Remove any existing storage symlink
-RUN rm -f public/storage
+# Copy application files — chown so www-data owns it, not root
+COPY --chown=www-data:www-data . ./
 
 # Finalize composer
 RUN composer dump-autoload --optimize --no-dev \
     && composer clear-cache
 
-# Install Octane
-RUN composer require laravel/octane --with-all-dependencies \
-    && php artisan octane:install --server="swoole" --no-interaction
-
 # Discover packages
 RUN php artisan package:discover --ansi
 
-# Setup storage and permissions
-RUN mkdir -p \
+# Setup storage and permissions (baked into image, will be copied into
+# fresh volumes with correct ownership by Docker on first mount)
+RUN chmod a+x ./artisan \
+    && mkdir -p \
     storage/framework/sessions \
     storage/framework/views \
     storage/framework/cache/data \
@@ -101,6 +81,10 @@ RUN mkdir -p \
 # Copy and setup entrypoint
 COPY ./scripts/php-fpm-entrypoint /usr/local/bin/php-entrypoint
 RUN chmod +x /usr/local/bin/php-entrypoint
+
+# Drop to non-root for everything from here on — build steps above
+# that needed root are already done.
+USER www-data
 
 ENTRYPOINT ["/usr/local/bin/php-entrypoint"]
 

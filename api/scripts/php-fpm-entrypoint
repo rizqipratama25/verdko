@@ -1,0 +1,42 @@
+#!/bin/bash
+
+main() {
+    if [ "$IS_WORKER" = "true" ]; then
+        exec "$@"
+    else
+        wait_for_db
+        run_migrations
+        optimize_app
+        run_server "$@"
+    fi
+}
+
+wait_for_db() {
+    echo "Waiting for DB to be ready"
+    until ./artisan migrate:status 2>&1 | grep -q -E "(Migration table not found|Migration name)"; do
+        echo "Database not ready, waiting..."
+        sleep 1
+    done
+    echo "Database is ready!"
+}
+
+run_migrations() {
+    echo "Running migrations..."
+    ./artisan migrate --force
+}
+
+optimize_app() {
+    echo "Optimizing application..."
+    ./artisan optimize:clear
+    ./artisan config:cache
+    ./artisan route:cache
+    ./artisan view:cache
+    ./artisan octane:reload
+}
+
+run_server() {
+    echo "Starting Octane server..."
+    exec /usr/local/bin/docker-php-entrypoint "$@"
+}
+
+main "$@"

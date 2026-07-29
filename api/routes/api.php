@@ -14,6 +14,7 @@ use App\Http\Controllers\Telegram\TelegramController;
 use App\Jobs\ProcessWelcomeMail;
 use App\Mail\WelcomeMail;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
@@ -56,23 +57,18 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
 Route::post('/monitoring-results', [PriceHistoryController::class, 'store'])->middleware('scraper.key');
 
-Route::get('/send-email', function () {
-    $users = [
-        ['email' => 'john@email.com', 'password' => '123'],
-        ['email' => 'jane@email.com', 'password' => '123'],
-        ['email' => 'jim@email.com', 'password' => '123'],
-        ['email' => 'jake@email.com', 'password' => '123'],
-        ['email' => 'ben@email.com', 'password' => '123'],
-        ['email' => 'ted@email.com', 'password' => '123'],
-        ['email' => 'blen@email.com', 'password' => '123'],
-        ['email' => 'mary@email.com', 'password' => '123'],
-        ['email' => 'bono@email.com', 'password' => '123'],
-        ['email' => 'didi@email.com', 'password' => '123'],
-    ];
+Route::get('/health', function () {
+    try {
+        DB::select('SELECT 1');
 
-    foreach ($users as $user) {
-        ProcessWelcomeMail::dispatch($user);
+        return response()->json([
+            'status' => 'healthy',
+            'database' => 'connected',
+        ], 200);
+    } catch (Throwable $e) {
+        return response()->json([
+            'status' => 'unhealthy',
+            'database' => 'disconnected',
+        ], 503);
     }
-
-    // Mail::to("rizqipratama.se@gmail.com")->send(new WelcomeMail());
 });
