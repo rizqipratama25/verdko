@@ -31,7 +31,6 @@ optimize_app() {
     ./artisan config:cache
     ./artisan route:cache
     ./artisan view:cache
-    ./artisan octane:reload
 }
 
 run_server() {

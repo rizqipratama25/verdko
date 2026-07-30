@@ -1,9 +1,10 @@
 services:
   api:
+    container_name: api
     build:
       context: ./api
       dockerfile: Dockerfile
-    container_name: api
+    image: verdko/api:1.0.0
     restart: unless-stopped
     depends_on:
       db:
@@ -11,7 +12,7 @@ services:
       redis:
         condition: service_healthy
     env_file:
-      - ./api/.env.prod
+      - ./api/.env.dev
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/api/health"]
       interval: 30s
@@ -24,12 +25,10 @@ services:
       - verdko-network
 
   queue-worker:
-    build:
-      context: ./api
-      dockerfile: Dockerfile
     container_name: queue-worker
+    image: verdko/api:1.0.0
     restart: unless-stopped
-    command: php artisan queue:work redis --queue=scout,default --sleep=1 --tries=3 --timeout=90 --max-time=3600
+    command: php artisan queue:work
     depends_on:
       db:
         condition: service_healthy
@@ -40,7 +39,7 @@ services:
     environment:
       IS_WORKER: "true"
     env_file:
-      - ./api/.env.prod
+      - ./api/.env.dev
     healthcheck:
       test: ["CMD", "pgrep", "-f", "queue:work"]
       interval: 30s
@@ -53,10 +52,8 @@ services:
       - verdko-network
 
   scheduler:
-    build:
-      context: ./api
-      dockerfile: Dockerfile
     container_name: scheduler
+    image: verdko/api:1.0.0
     restart: unless-stopped
     command: php artisan schedule:work
     depends_on:
@@ -67,7 +64,7 @@ services:
       api:
         condition: service_healthy
     env_file:
-      - ./api/.env.prod
+      - ./api/.env.dev
     healthcheck:
       test: ["CMD", "pgrep", "-f", "schedule:work"]
       interval: 30s
@@ -135,6 +132,23 @@ services:
       timeout: 5s
       retries: 3
       start_period: 10s
+    networks:
+      - verdko-network
+
+  client:
+    container_name: client
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    image: verdko/client:1.0.0
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      api:
+        condition: service_healthy
+    env_file:
+      - ./client/.env.dev
     networks:
       - verdko-network
 

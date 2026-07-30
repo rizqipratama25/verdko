@@ -1,8 +1,5 @@
 <?php
 
-use App\Telegram\Commands\StartCommand;
-use Telegram\Bot\Commands\HelpCommand;
-
 return [
     /*
     |--------------------------------------------------------------------------
@@ -42,6 +39,7 @@ return [
             'allowed_updates' => null,
             'commands' => [
                 // Acme\Project\Commands\MyTelegramBot\BotCommand::class
+                \App\Telegram\Commands\StartCommand::class,
             ],
         ],
 
@@ -131,8 +129,8 @@ return [
     |
     */
     'commands' => [
-        HelpCommand::class,
-        StartCommand::class
+        \Telegram\Bot\Commands\HelpCommand::class,
+        \App\Telegram\Commands\StartCommand::class,
     ],
 
     /*
@@ -193,8 +191,7 @@ return [
                 'status', // Shared Command Name.
                 'Acme\Project\Commands\BotCommand' // Full Path to Command Class.
            ],
-        */
-    ],
+        */],
 
     /*
     |--------------------------------------------------------------------------

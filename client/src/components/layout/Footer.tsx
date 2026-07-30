@@ -1,6 +1,5 @@
 import Logo from "../common/Logo"
 import InstagramIcon from "../icons/InstagramIcon"
-import XIcon from "../icons/XIcon"
 
 const Footer = () => {
     return (
