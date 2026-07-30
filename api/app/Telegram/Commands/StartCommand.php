@@ -13,16 +13,11 @@ class StartCommand extends Command
 
     public function handle(): void 
     {
-        logger("StartCommand handle");
         $username = $this->getUpdate()->getMessage()->from->username;
         $chatId = $this->getUpdate()->getMessage()->from->id;
 
-        logger("Save telegram info");
         SaveUserTelegramInfo::dispatch($username, $chatId);
 
-        logger("User info saved");
-        
-        logger("Reply user");
         $this->replyWithMessage([
             'text' => "👋 Hello, I'm Verdko Bot. Please wait a moment..."
         ]);
