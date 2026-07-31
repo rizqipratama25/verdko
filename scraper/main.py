@@ -168,7 +168,8 @@ def main():
     sys.stderr.reconfigure(encoding="utf-8")
     
     r = redis.Redis(
-        host="127.0.0.1",
+        host=os.getenv("REDIS_HOST"),
+        password=os.getenv("REDIS_PASSWORD"),
         port=6379,
         db=0,
         decode_responses=True,

@@ -3,16 +3,28 @@ import { getUser } from "../utils/authStorage.utils";
 import Modal from "../components/common/Modal";
 import { Send } from "lucide-react";
 import Button from "../components/common/Button";
+import { useEffect, useState } from "react";
+import type { AuthUser } from "../types/auth.type";
 
 const TelegramRoute = () => {
-    const user = getUser();
+    const [user, setUser] = useState<AuthUser | null>(null);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            const user = getUser();
+            setUser(user);
+        }, 1500);
+
+        return () => clearInterval(interval);
+    }, [])
+
 
     const handleTelegramConnect = () => {
         window.open("https://t.me/verdko_bot?start=signup", "_blank");
     }
 
-    if (!user.telegram_id) {
-        return (
+    {
+        !user?.telegram_id && (
             <Modal>
                 <div className="flex flex-col items-center gap-6">
                     <div className="w-fit flex items-center justify-center text-primary-hover bg-primary-soft p-3 rounded-full">
