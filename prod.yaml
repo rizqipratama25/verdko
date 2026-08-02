@@ -14,3 +14,7 @@ services:
   client:
     env_file:
       - ./client/.env.prod
+
+  scraper:
+    env_file:
+      - ./scraper/.env.prod
