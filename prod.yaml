@@ -11,6 +11,11 @@ services:
     env_file:
       - ./api/.env.prod
 
+  nginx:
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+
   client:
     env_file:
       - ./client/.env.prod

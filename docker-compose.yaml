@@ -80,8 +80,6 @@ services:
     depends_on:
       api:
         condition: service_healthy
-    volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
     networks:
       - verdko-network
       
@@ -154,6 +152,8 @@ services:
         condition: service_healthy
     networks:
       - verdko-network
+
+  
 
 volumes:
   storage-data:
