@@ -11,8 +11,6 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    env_file:
-      - ./api/.env.dev
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/api/health"]
       interval: 30s
@@ -38,8 +36,6 @@ services:
         condition: service_healthy
     environment:
       IS_WORKER: "true"
-    env_file:
-      - ./api/.env.dev
     healthcheck:
       test: ["CMD", "pgrep", "-f", "queue:work"]
       interval: 30s
@@ -63,8 +59,6 @@ services:
         condition: service_healthy
       api:
         condition: service_healthy
-    env_file:
-      - ./api/.env.dev
     healthcheck:
       test: ["CMD", "pgrep", "-f", "schedule:work"]
       interval: 30s
@@ -145,8 +139,6 @@ services:
     depends_on:
       api:
         condition: service_healthy
-    env_file:
-      - ./client/.env.dev
     networks:
       - verdko-network
 
