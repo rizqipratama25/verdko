@@ -1,5 +1,6 @@
 asset/
 node_modules/
 scraper_pip/
-*.env
+.env
 .env.dev
+.env.prod

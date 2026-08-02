@@ -1,0 +1,16 @@
+services:
+  api:
+    env_file:
+      - ./api/.env.prod
+
+  queue-worker:
+    env_file:
+      - ./api/.env.prod
+
+  scheduler:
+    env_file:
+      - ./api/.env.prod
+
+  client:
+    env_file:
+      - ./client/.env.prod
