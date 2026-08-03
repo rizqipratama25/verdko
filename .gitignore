@@ -5,3 +5,4 @@ scraper_pip/
 .env.dev
 .env.prod
 nginx.conf
+nginx/
