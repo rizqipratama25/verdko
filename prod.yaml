@@ -19,6 +19,8 @@ services:
   client:
     env_file:
       - ./client/.env.prod
+    args:
+      - VITE_API_URL=https://verdko.com/api
 
   scraper:
     env_file:

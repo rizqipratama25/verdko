@@ -1,5 +1,7 @@
 FROM oven/bun:1.3-debian AS builder
 
+ARG VITE_API_URL=http://localhost/api
+
 WORKDIR /app
 
 COPY package.json bun.lock ./
