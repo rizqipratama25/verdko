@@ -1,31 +1,33 @@
 import { Outlet } from "react-router-dom";
-import { getUser } from "../utils/authStorage.utils";
+import { saveUser } from "../utils/authStorage.utils";
 import Modal from "../components/common/Modal";
 import { Send } from "lucide-react";
 import Button from "../components/common/Button";
-import { useEffect, useState } from "react";
-import type { AuthUser } from "../types/auth.type";
+import { useEffect } from "react";
+import { useMe } from "../hooks/auth/useMe";
 
 const TelegramRoute = () => {
-  // 1. Langsung set initial state dari storage agar tidak delay 1.5s
-  const [user, setUser] = useState<AuthUser | null>(() => getUser());
+  const { data: me, isSuccess, isLoading } = useMe();
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      const updatedUser = getUser();
-      setUser(updatedUser);
-    }, 1500);
+    if (isSuccess && me) {
+      saveUser(me);
+    }
+  }, [me, isSuccess]);
 
-    return () => clearInterval(interval);
-  }, []);
+  const currentUser = me;
 
   const handleTelegramConnect = () => {
     window.open("https://t.me/verdko_bot?start=signup", "_blank");
   };
 
+  if (isLoading && !currentUser) {
+    return null;
+  }
+
   return (
     <>
-      {!user?.telegram_id && (
+      {!currentUser?.telegram_id && (
         <Modal>
           <div className="flex flex-col items-center gap-6">
             <div className="w-fit flex items-center justify-center text-primary-hover bg-primary-soft p-3 rounded-full">

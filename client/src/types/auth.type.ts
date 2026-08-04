@@ -8,6 +8,15 @@ export interface AuthUser {
     token: string;
 }
 
+export interface Me {
+    id: number;
+    name: string;
+    email: string;
+    email_verified_at: string;
+    telegram_username: string;
+    telegram_id: string;
+}
+
 export interface LoginPayload {
     email: string;
     password: string;

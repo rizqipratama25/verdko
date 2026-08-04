@@ -1,4 +1,4 @@
-import type { AuthUser } from "../types/auth.type";
+import type { AuthUser, Me } from "../types/auth.type";
 
 
 const TOKEN_KEY = "verdko_token";
@@ -15,6 +15,14 @@ export const clearAuth = () => {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
     localStorage.removeItem(VERIFIED_AT_KEY);
+}
+
+export const clearUser = () => {
+    localStorage.removeItem(USER_KEY);
+}
+
+export const saveUser = (user: Me | {}) => {
+    localStorage.setItem(USER_KEY, JSON.stringify(user));
 }
 
 export const getToken = () => localStorage.getItem(TOKEN_KEY);

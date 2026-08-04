@@ -1,6 +1,6 @@
 import api from "../lib/axios";
 import type { ApiResponse } from "../types/apiResponse.type";
-import type { AuthUser, DeleteAccountPayload, ForgotPasswordPayload, LoginPayload, ResetPasswordPayload, SignupPayload } from "../types/auth.type";
+import type { AuthUser, DeleteAccountPayload, ForgotPasswordPayload, LoginPayload, Me, ResetPasswordPayload, SignupPayload } from "../types/auth.type";
 
 export const signup = async (payload: SignupPayload): Promise<AuthUser> => {
     const { data: apiResponse } = await api.post<ApiResponse<AuthUser>>("/auth/signup", payload);
@@ -12,8 +12,8 @@ export const login = async (payload: LoginPayload): Promise<AuthUser> => {
     return apiResponse.data;
 };
 
-export const me = async (): Promise<AuthUser> => {
-    const { data: apiResponse } = await api.get<ApiResponse<AuthUser>>("/auth/me");
+export const me = async (): Promise<Me> => {
+    const { data: apiResponse } = await api.get<ApiResponse<Me>>("/auth/me");
     return apiResponse.data;
 }
 
