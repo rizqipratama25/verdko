@@ -17,10 +17,6 @@ export const clearAuth = () => {
     localStorage.removeItem(VERIFIED_AT_KEY);
 }
 
-export const clearUser = () => {
-    localStorage.removeItem(USER_KEY);
-}
-
 export const saveUser = (user: Me | {}) => {
     localStorage.setItem(USER_KEY, JSON.stringify(user));
 }
