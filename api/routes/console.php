@@ -11,3 +11,4 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command('app:send-job-to-scraper-command')->everyThirtyMinutes();
+Schedule::command('auth:clear-resets')->everyThirtyMinutes();
